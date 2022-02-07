@@ -43,15 +43,19 @@ func NewSections(r io.Reader) *Sections {
 	var line string
 	var err error
 
-	for err == nil {
+	for {
 		line, err = reader.ReadString('\n')
-
-		if isSectionHeader(line) {
-			// create new sections
-			sectionContents = append(sectionContents, sectionContent)
-			sectionContent = []string{line}
-		} else {
+		if err == nil {
+			if isSectionHeader(line) {
+				// record last section and create a new section
+				sectionContents = append(sectionContents, sectionContent)
+				sectionContent = []string{}
+			}
 			sectionContent = append(sectionContent, line)
+		} else {
+			// end of reader
+			sectionContents = append(sectionContents, sectionContent)
+			break
 		}
 	}
 
