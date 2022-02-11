@@ -50,7 +50,7 @@ func NewTypeInfo(name string, Content []string) *TypeInfo {
 			}
 		case typeRelocateHeaderRegex.MatchString(Content[i]):
 			rs := typeRelocateRegex.FindStringSubmatch(Content[i])
-			//fmt.Println(rs)
+			//fmt.Println(Content[i], rs)
 			r := &Relocate{
 				Addr:       stringToInt(rs[1]),
 				Width:      stringToInt(rs[2]),
@@ -123,4 +123,4 @@ var typeSizeRegex = regexp.MustCompile(`^\S.+?size=(\d+)`)
 var typeBinaryDataHeaderRegex = regexp.MustCompile(`^\s+0x`)
 var typeBinaryDataRegex = regexp.MustCompile(`0x[abcdef\d]+\s((?:[abcdef\d][abcdef\d]\s)+)\s`)
 var typeRelocateHeaderRegex = regexp.MustCompile(`^\s+rel`)
-var typeRelocateRegex = regexp.MustCompile(`^\s+rel\s(\d+)\+(\d+)\st=(\d+)\s(.+)\+(\d+)`)
+var typeRelocateRegex = regexp.MustCompile(`^\s+rel\s(\d+)\+(\d+)\st=(-?\d+)\s(.+)\+(\d+)`)

@@ -66,7 +66,7 @@ func TestAnalysisFunction(t *testing.T) {
 	0x0050 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
 	rel 32+8 t=1 runtime.gcbits.01+0
 	rel 40+4 t=5 type..namedata.*func(main.A, int, string, ...bool) bool-+0
-	rel 44+4 t=6 type.*func("".A, int, string, ...bool) bool+0
+	rel 44+4 t=-32763 type.*func("".A, int, string, ...bool) bool+0
 	rel 56+8 t=1 type."".A+0
 	rel 64+8 t=1 type.int+0
 	rel 72+8 t=1 type.string+0
@@ -75,6 +75,7 @@ func TestAnalysisFunction(t *testing.T) {
 `
 	result := map[int]analyzedContent{
 		9:  {32, 8, "\tgcdata:\t\truntime.gcbits.01+0"},
+		11: {44, 4, "\tptrToThis:\ttype.*func(\"\".A, int, string, ...bool) bool+0"},
 		12: {48, 2, "inCount:\t4"},
 		13: {50, 2, "outCount:\n\t(bit:0-14)outCount:\t1\n\t(bit:15)dotdotdot:\t1"},
 		14: {56, 8, "in[0]:\ttype.\"\".A+0"},

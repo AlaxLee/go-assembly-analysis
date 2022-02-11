@@ -59,12 +59,13 @@ type.[]int SRODATA dupok size=56
 package main
 
 import (
-	analysis "github.com/AlaxLee/go-assembly-analysis"
+	"github.com/AlaxLee/go-assembly-analysis/analysis"
+	"log"
 )
 
 func main() {
 
-	a := analysis.AnalysisCompiledFileContent(`
+	a, err := analysis.AnalysisContent(`
 type.[]int SRODATA dupok size=56
         0x0000 18 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00  ................
         0x0010 8e 66 f9 1b 02 08 08 17 00 00 00 00 00 00 00 00  .f..............
@@ -74,7 +75,10 @@ type.[]int SRODATA dupok size=56
         rel 40+4 t=5 type..namedata.*[]int-+0
         rel 44+4 t=6 type.*[]int+0
         rel 48+8 t=1 type.int+0
-`)
+`, true)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	a.DisplayAll()
 }
 ```

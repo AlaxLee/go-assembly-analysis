@@ -2,6 +2,7 @@ package sections
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"regexp"
 )
@@ -13,6 +14,12 @@ type Section interface {
 type Sections struct {
 	NameOrder []string
 	Map       map[string]Section
+}
+
+func (ss *Sections) DisplayNames() {
+	for _, name := range ss.NameOrder {
+		fmt.Println(name)
+	}
 }
 
 func (ss *Sections) DisplayAll() {
@@ -33,7 +40,7 @@ func (ss *Sections) Display(name string) {
 	}
 }
 
-func NewSections(r io.Reader) *Sections {
+func NewSections(r io.Reader) (*Sections, error) {
 
 	reader := bufio.NewReader(r)
 
@@ -52,15 +59,17 @@ func NewSections(r io.Reader) *Sections {
 				sectionContent = []string{}
 			}
 			sectionContent = append(sectionContent, line)
-		} else {
+		} else if err == io.EOF {
 			// end of reader
 			sectionContents = append(sectionContents, sectionContent)
 			break
+		} else {
+			return nil, err
 		}
 	}
 
 	if len(sectionContents) <= 1 {
-		return nil
+		return &Sections{}, nil
 	}
 
 	sectionContents = sectionContents[1:]
@@ -78,7 +87,7 @@ func NewSections(r io.Reader) *Sections {
 		ss.Map[name] = s
 	}
 
-	return ss
+	return ss, nil
 }
 
 func createSection(content []string) (name string, s Section) {
