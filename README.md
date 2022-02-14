@@ -35,7 +35,7 @@ package main
 import "fmt"
 
 func main() {
-	a := []int{}
+	a := []int{1,2,3,4}
 	fmt.Println(a)
 }
 ```
@@ -50,11 +50,11 @@ type.[]int SRODATA dupok size=56
         0x0030 00 00 00 00 00 00 00 00                          ........
         rel 32+8 t=1 runtime.gcbits.01+0
         rel 40+4 t=5 type..namedata.*[]int-+0
-        rel 44+4 t=6 type.*[]int+0
+        rel 44+4 t=-32763 type.*[]int+0
         rel 48+8 t=1 type.int+0
 ...
 ```
-此时，可以用 go-assembly-analysis 来分析，代码如下
+此时，可以用 go-assembly-analysis 的 analysis 包来分析，代码如下
 ```go
 package main
 
@@ -73,7 +73,7 @@ type.[]int SRODATA dupok size=56
         0x0030 00 00 00 00 00 00 00 00                          ........
         rel 32+8 t=1 runtime.gcbits.01+0
         rel 40+4 t=5 type..namedata.*[]int-+0
-        rel 44+4 t=6 type.*[]int+0
+        rel 44+4 t=-32763 type.*[]int+0
         rel 48+8 t=1 type.int+0
 `, true)
 	if err != nil {
@@ -82,7 +82,17 @@ type.[]int SRODATA dupok size=56
 	a.DisplayAll()
 }
 ```
-执行结果如下：
+或者使用下载编译后的二进制命令 go-assembly-analysis 来分析
+```text
+//下载包并编译，得到二进制命令 go-assembly-analysis
+go get github.com/AlaxLee/go-assembly-analysis
+//支持分析本地文件
+go-assembly-analysis -an 'type.[]int' -f main.go
+//也支持分析github上的远端文件
+go-assembly-analysis -an 'type.[]int' -u https://github.com/AlaxLee/go-assembly-analysis/blob/master/doc/example/typeinfo/slice/slice.go
+
+```
+analysis 包 和 二进制命令 go-assembly-analysis 均能得到如下执行结果：
 ```text
 type.[]int is a slice, and type size is 56
 0+48:   _type:
